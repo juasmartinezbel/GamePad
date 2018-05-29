@@ -35,10 +35,8 @@ void initControllers(){
 void rotateCamera(){
   if(gpad.getSlider("Rotación Z").getValue()<minimum){
     eye.rotateYPos();
-    println("AAAAAAAA");
   }else if(gpad.getSlider("Rotación Z").getValue()>minimum){
     eye.rotateYNeg();
-    println("AAAAAAAA");
   }
   
   if(gpad.getSlider("Eje Z").getValue()<minimum){
@@ -71,9 +69,33 @@ void moveCamera(){
   }
   
   if(gpad.getHat(0).up()){
+    eye.translateYNeg();
   }else if(gpad.getHat(0).down()){
+    eye.translateYPos();
   }
 
 
+}
+
+void changeModel(){
+    if(delay>5){
+      if(gpad.getButton("Botón 0").pressed()){
+        shape = new Shape(scene);
+        shape = setModel(shapePath);
+        delay=1;
+      }else if(gpad.getButton("Botón 1").pressed()){
+        shape = new Shape(scene);
+        shape = setModel(shapePath2);
+        delay=1;
+      }else if(gpad.getButton("Botón 2").pressed()){
+        shape = new Shape(scene);
+        shape = setModel(shapePath3);
+        delay=1;
+      }else if (gpad.getButton("Botón 3").pressed()){
+        shape = new Shape(scene);
+        shape = setModel(shapePath4);
+        delay=1;
+      }
+    }
 }
  

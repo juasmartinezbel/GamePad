@@ -22,8 +22,9 @@ Shape shape;
 Shape shape2;
 Scene scene;
 String shapePath = "Arwing/arwing.obj";
-String shapePath2 = "KillerBee/killerbee.obj";
-
+String shapePath2 = "Pommy/Pommy.obj";
+String shapePath3 = "boo/boo.obj";
+String shapePath4 = "star/star.obj";
 public void setup() {
     initControllers();
   size(700, 700, P3D);
@@ -36,7 +37,7 @@ public void setup() {
   scene.setDefaultGrabber(eye);
   scene.fitBallInterpolation();
   shape = setModel(shapePath);
-  shape2 = setModel(shapePath2);
+  
 }
 
 public void draw() {
@@ -47,16 +48,16 @@ public void draw() {
   
   scene.traverse();
   background(0);
-  //lights();
-  rotateCamera();
+  lights();
   //Draw Constraints
   scene.drawAxes();
   shape.draw();
-  pushMatrix();
+  /*pushMatrix();
     translate(10,10,300);
     //lights();
     shape2.draw();
-  popMatrix();
+  popMatrix();*/
   rotateCamera();
   moveCamera();
+  changeModel();
 }

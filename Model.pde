@@ -1,4 +1,4 @@
-HashMap <PShape, Integer[]> Vertex;
+HashMap <PShape, Integer[]> Vertexs;
 Vector[] getBoundingBox(PShape shape) {
   Vector v[] = new Vector[2];
   float minx = 999;  
@@ -34,7 +34,7 @@ Shape setModel(String shapePath){
   float max = max(abs(box[0].x() - box[1].x()), abs(box[0].y() - box[1].y()), abs(box[0].z() - box[1].z()));
   s = new OrbitShape(scene);
   s.set(editModel(model));
-  s.rotate(new Quaternion(new Vector(1, 0, 1), PI));
+  s.rotate(new Quaternion(new Vector(0, 0, 1), PI));
   s.scale(200.f*1.f/max);
   
   return s;
@@ -45,7 +45,6 @@ PShape editModel(PShape model){
     for(int j = 0; j<model.getChild(i).getVertexCount(); j++){
       PVector t = model.getChild(i).getVertex(j);
       if(i==1&&j==0){
-        println(tz);
         model.getChild(i).setVertex(j, t.x+tx, t.y+ty, t.z+tz);
       }
     }
