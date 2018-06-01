@@ -1,3 +1,4 @@
+int delay;
 void readButtons(){
   if(delay>17){
     if(gpad.getButton("Botón 0").pressed()){

@@ -1,1 +1,1 @@
-Please give credit to alec pike
+please give credit to alec pike when used

@@ -1,13 +1,12 @@
 ControlIO control;
 ControlDevice gpad;
-int delay=0;
+int buttonDelay=0;
 
 float ry=0;float ty=0;
 
 float rx=0;float tx=0;
 
 float rz=0;float tz=0;
-int select=0;
 float minimum=-1.5258789E-5;
 
 void initControllers(){
@@ -52,7 +51,6 @@ void rotateCamera(){
   if(gpad.getButton("Botón 6").pressed()){       
     eye.rotateZNeg();
   }
-   
 }
 
 void moveCamera(){
@@ -77,7 +75,7 @@ void moveCamera(){
 
 }
 
-void changeModel(){
+/*void changeModel(){
     if(delay>5){
       if(gpad.getButton("Botón 0").pressed()){
         shape = new Shape(scene);
@@ -97,5 +95,58 @@ void changeModel(){
         delay=1;
       }
     }
+}*/
+
+
+int yx=0;
+void rotateModel(){
+  if(gpad.getSlider("Rotación Z").getValue()>minimum){
+     models[currentModel].rotateY(radians(-1));
+     rotation[currentModel].y-=1;
+  }else if(gpad.getSlider("Rotación Z").getValue()<minimum){
+     models[currentModel].rotateY(radians(1));
+     rotation[currentModel].y+=1;
+  }
+  
+  if(gpad.getSlider("Eje Z").getValue()>minimum){
+    models[currentModel].rotateX(radians(-1));
+    rotation[currentModel].x-=1;
+  }else if(gpad.getSlider("Eje Z").getValue()<minimum){
+    models[currentModel].rotateX(radians(1));
+    rotation[currentModel].x+=1;
+  }
+
+  if(gpad.getButton("Botón 6").pressed()){
+    models[currentModel].rotateZ(radians(-1));
+    rotation[currentModel].z+=1;
+  }
+  
+  if(gpad.getButton("Botón 7").pressed()){       
+    models[currentModel].rotateZ(radians(1));
+    rotation[currentModel].z-=1;
+  }
 }
- 
+
+void movePoints(){
+  
+}
+
+void selectModel(){
+  if(gpad.getButton("Botón 8").pressed()&&buttonDelay>15){
+    selected=!selected;
+    buttonDelay=0;
+  }
+}
+
+
+
+void changePoint(){
+  if(gpad.getHat(0).left()&&buttonDelay>15){
+      neededPoint--;
+      buttonDelay=0;
+    }
+    if(gpad.getHat(0).right()&&buttonDelay>15){
+      neededPoint++;
+      buttonDelay=0;
+    }
+}
