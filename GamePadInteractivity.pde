@@ -7,7 +7,7 @@ import org.gamecontrolplus.gui.*;
 import org.gamecontrolplus.*;
 import net.java.games.input.*;
 static final int NO_MODELS=1;
-static final int VIEW_RADIUS=10;
+static final int VIEW_RADIUS=100;
 
 Node eye;
 Scene scene;
@@ -34,9 +34,11 @@ void setup() {
   scene.setFieldOfView(PI/6);
   scene.setDefaultGrabber(eye);
   scene.fitBallInterpolation();
-  ShapeVertex=new HashMap <Integer, HashMap<String, Integer[]>>();
+  ShapeVertex=new HashMap <Integer, HashMap<String, Float[]>>();
+  OriginalVertex = new HashMap <Integer, HashMap<String, PVector>>();
+  concidentialPoints = new HashMap <Integer, HashMap<String, ArrayList<String>>>(); 
   modelSize= new HashMap <Integer, Integer>();
-  modelBoards = new HashMap <Integer, String[]>();
+  
   rotation = new PVector [NO_MODELS];
   childSetted = new boolean [NO_MODELS];
   for(int i=0;i<NO_MODELS;i++){
@@ -76,36 +78,47 @@ void draw() {
   stroke(255);
   sphere(VIEW_RADIUS);*/
   if(!selected){
-    if(lastNeeded!=-2){
-      neededPoint=0;
-      removePoint(currentModel);
-    }
-    lastNeeded=-2;
-    rotateCamera();
-    moveCamera();
-    neededPoint=0;
+    cameraFunctions();
   }else{
-    int size=modelSize.get(currentModel);
-    neededPoint=neededPoint%size;
-    
-    if (neededPoint<0) neededPoint += size;
-    
-    if(lastNeeded!=neededPoint){
-      
-      if(childSetted[currentModel]){
-        changePoint(currentModel, neededPoint);
-      }else{
-        newCircle(currentModel, 0, 0);
-        childSetted[currentModel]=true;
-      }
-      lastNeeded=neededPoint;
-    }
-    rotateModel();
-    movePoints();
-    changePoint();
-    
+    modelFunctions();
   }
   
   
   selectModel();
+}
+
+void modelFunctions(){
+  int size=modelSize.get(currentModel);
+  neededPoint=neededPoint%size;
+  
+  if (neededPoint<0) neededPoint += size;
+  if(lastNeeded!=neededPoint){
+    if(childSetted[currentModel]){
+      changePoint(currentModel, neededPoint);
+    }else{
+      firstCircle(currentModel);
+      childSetted[currentModel]=true;
+    }
+    lastNeeded=neededPoint;
+  }
+  if(gpad.getButton("Botón 0").pressed()){
+    scaleModel();
+  }else{
+    sx=1;
+    rotateModel();
+    movePoints();
+    changePoint();
+    resetPoint();
+  }
+}
+
+void cameraFunctions(){
+  if(lastNeeded!=-2){
+      neededPoint=0;
+      removePoint(currentModel);
+    }
+  lastNeeded=-2;
+  rotateCamera();
+  moveCamera();
+  neededPoint=0;
 }
