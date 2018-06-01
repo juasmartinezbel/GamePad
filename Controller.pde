@@ -1,13 +1,14 @@
 ControlIO control;
 ControlDevice gpad;
 int buttonDelay=0;
-
+int rotationDelay=0;
 float ry=0;float ty=0;
 
 float rx=0;float tx=0;
 
 float rz=0;float tz=0;
 float minimum=-1.5258789E-5;
+int ratium = 200;
 
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
@@ -42,44 +43,62 @@ void initControllers(){
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 void rotateCamera(){
-  if(gpad.getSlider("Rotación Z").getValue()<minimum){
-    eye.rotateYPos();
-  }else if(gpad.getSlider("Rotación Z").getValue()>minimum){
-    eye.rotateYNeg();
-  }
+    int rotationRatium = ratium;
+    if(gpad.getButton("Botón 10").pressed()){
+      rotationRatium = 90;
+    }
+    if(gpad.getSlider("Rotación Z").getValue()<minimum){
+      eye.rotate(new Quaternion(new Vector(0, 1, 0), PI/rotationRatium));
+      rotationDelay=0;
+    }else if(gpad.getSlider("Rotación Z").getValue()>minimum){
+      eye.rotate(new Quaternion(new Vector(0, -1, 0), PI/rotationRatium));
+      rotationDelay=0;
+    }
+    
+    if(gpad.getSlider("Eje Z").getValue()<minimum){
+      eye.rotate(new Quaternion(new Vector(-1, 0, 0), PI/rotationRatium));
+      rotationDelay=0;
+    }else if(gpad.getSlider("Eje Z").getValue()>minimum){
+      eye.rotate(new Quaternion(new Vector(1, 0, 0), PI/rotationRatium));
+      rotationDelay=0;
+    }
   
-  if(gpad.getSlider("Eje Z").getValue()<minimum){
-    eye.rotateXPos();
-  }else if(gpad.getSlider("Eje Z").getValue()>minimum){
-    eye.rotateXNeg();
-  }
-
-  if(gpad.getButton("Botón 7").pressed()){
-    eye.rotateZPos();
-  }
+    if(gpad.getButton("Botón 7").pressed()){
+      eye.rotateZPos();
+      rotationDelay=0;
+    }
   
-  if(gpad.getButton("Botón 6").pressed()){       
-    eye.rotateZNeg();
-  }
+    if(gpad.getButton("Botón 6").pressed()){       
+      eye.rotateZNeg();
+      rotationDelay=0;
+    }
 }
 
 void moveCamera(){
   if(gpad.getSlider("Eje Y").getValue()<minimum){
     eye.translateZNeg();
+    //pointerS.translateZPos();
+    //println("AAAAAAAAA");
   }else if(gpad.getSlider("Eje Y").getValue()>minimum){
     eye.translateZPos();
+    //pointerS.translateZNeg();
+    //println("bbb");
   }
   
   if(gpad.getSlider("Eje X").getValue()<minimum){
     eye.translateXPos();
+    //pointerS.translateXNeg();
   }else if(gpad.getSlider("Eje X").getValue()>minimum){
     eye.translateXNeg();
+    //pointerS.translateXPos();
   }
   
   if(gpad.getHat(0).up()){
     eye.translateYNeg();
+    //pointerS.translateYPos();
   }else if(gpad.getHat(0).down()){
     eye.translateYPos();
+    //pointerS.translateYNeg();
   }
 
 
