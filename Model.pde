@@ -90,7 +90,7 @@ void setHashMap(int I) {
   
   ShapeVertex.put(I, m);
   modelSize.put(I, size-1);
-  modelBoard.put(I, p);
+  modelBoards.put(I, p);
 }
 
 
@@ -141,27 +141,20 @@ PVector getPoint(int I, int needed) {
 }
 
 void removePoint(int I){
-   PShape model = models[I];
+  PShape model = models[I];
   model.removeChild(model.getChildCount()-1);
   childSetted[I]=false;
 }
 
 
-PVector changePoint(int I, int needed){
-  int current=0;
+void changePoint(int I, int needed){
   PShape model = models[I];
   model.removeChild(model.getChildCount()-1);
-  for (int i = 0; i<model.getChildCount()-1; i++) {
-    for (int j = 0; j<model.getChild(i).getVertexCount(); j++) {
-      if (needed==current) {
-         newCircle(I, i, j);
-         return null;
-      }
-      current++;
-    }
-  }
-  println("WHOOPS");
-  return null;
+  String u = modelBoards.get(I)[needed];
+  int i = Integer.valueOf(u.split(":")[0]);
+  int j = Integer.valueOf(u.split(":")[1]);
+  newCircle(I, i, j);
+ 
 }
 
 void newCircle(int I, int i, int j) {
