@@ -144,6 +144,7 @@ void firstCircle(int I){
 
 void newCircle(int I, float i, float j, float k) {
   String s = i+":"+j+":"+k;
+  println(I);
   println(s);
   PShape model = models[I];
   HashMap<String, Float[]> m = ShapeVertex.get(I);
@@ -152,13 +153,24 @@ void newCircle(int I, float i, float j, float k) {
   
   translate(modelsPosition[I].x, modelsPosition[I].y, modelsPosition[I].z);
   pushStyle();
-  PVector u = new PVector(t.x+xyz[0]+modelsPosition[I].x, t.y+xyz[1]+modelsPosition[I].y, t.z+xyz[2]+modelsPosition[I].z);
+  Vector u = new Vector(t.x+xyz[0], t.y+xyz[1], t.z+xyz[2]);
+  //u.add(modelsPosition[I].x,modelsPosition[I].y,modelsPosition[I].z);
   fill(0,255,0);
   stroke(0,255,0);
-  PShape o=createShape(ELLIPSE, 0, 0, 0.50, 0.50);
-
+  float radious = 0.50;
+  if(I==1||I==2){
+    radious = 0.1;
+  }else if(I==3||I==7||I==4){
+    radious = 0.09;
+  }else if(I==6){
+    radious = 0.05;
+  }else if(I==5){
+    radious = 3;
+  }
+  PShape o=createShape(SPHERE, radious);
+  //PShape o=createShape(ELLIPSE, 0, 0, 1000, 1000);
   model.addChild(o);
-  o.translate(u.x, u.y, u.z);
+  o.translate(u.x(), u.y(), u.z());
   popStyle();
 }
 
@@ -168,9 +180,9 @@ void newCircle(int I, float i, float j, float k) {
 Shape getBox(int I){
   PShape model = models[I];
   Vector[] v= getBoundingBox(model);
-  
-  stroke(255);
-  fill(0,255,0);
+  pushStyle();
+  //stroke(255);
+  //fill(0,255,0);
   //-3.2:2.9:-2.9
   noStroke();
   noFill();
@@ -185,5 +197,6 @@ Shape getBox(int I){
   v[0].multiply(scale);
   v[1].multiply(scale);
   boxesVector.put(I, v); 
+  popStyle();
   return m;
 }

@@ -143,7 +143,8 @@ int getBoxes(){
       PVector m = boxPosition[i];
       u[0]=new Vector(v[0].x()+m.x,v[0].y()+m.y,v[0].z()+m.z);
       u[1]=new Vector(v[1].x()+m.x,v[1].y()+m.y,v[1].z()+m.z);
-      
+      u[0].add(-20,-20,-20);
+      u[1].add(20,20,20);
       boolean Flag1=(u[1].x()>o.x()&&u[0].x()<o.x())||(u[1].x()<o.x()&&u[0].x()>o.x());
       boolean Flag2=(u[1].y()>o.y()&&u[0].y()<o.y())||(u[1].y()<o.y()&&u[0].y()>o.y());
       boolean Flag3=(u[1].z()>o.z()&&u[0].z()<o.z())||(u[1].z()<o.z()&&u[0].z()>o.z());
