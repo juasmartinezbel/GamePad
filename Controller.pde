@@ -79,13 +79,13 @@ void moveCamera(){
   if(gpad.getSlider("Eje Y").getValue()<minimum){
     eye.translateZNeg();
     eye.translateZNeg();
-    if (run) eye.translateZNeg();
+    if (run) { eye.translateZNeg();  eye.translateZNeg(); }
     //pointerS.translateZPos();
     //println("AAAAAAAAA");
   }else if(gpad.getSlider("Eje Y").getValue()>minimum){
     eye.translateZPos();
     eye.translateZPos();
-    if (run) eye.translateZPos();
+    if (run){ eye.translateZPos(); eye.translateZPos();}
     //pointerS.translateZNeg();
     //println("bbb");
   }
@@ -93,24 +93,24 @@ void moveCamera(){
   if(gpad.getSlider("Eje X").getValue()<minimum){
     eye.translateXPos();
     eye.translateXPos();
-    if (run) eye.translateXPos();
+    if (run) {eye.translateXPos(); eye.translateXPos();}
     //pointerS.translateXNeg();
   }else if(gpad.getSlider("Eje X").getValue()>minimum){
     eye.translateXNeg();
     eye.translateXNeg();
-    if(run)eye.translateXNeg();
+    if(run){eye.translateXNeg();eye.translateXNeg();}
     //pointerS.translateXPos();
   }
   
   if(gpad.getHat(0).up()){
     eye.translateYNeg();
     eye.translateYNeg();
-    if(run)eye.translateYNeg();
+    if(run){eye.translateYNeg();eye.translateYNeg();}
     //pointerS.translateYPos();
   }else if(gpad.getHat(0).down()){
     eye.translateYPos();
     eye.translateYPos();
-    if(run) eye.translateYPos();
+    if(run) {eye.translateYPos();eye.translateYPos();}
     //pointerS.translateYNeg();
   }
 
@@ -252,6 +252,12 @@ void deselectModel(){
   }
 }
 
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+// Otras Funciones
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+
 void reset(){
   if(gpad.getButton("Botón 9").pressed()&&buttonDelay>7){
     frameCount=-1;
@@ -269,4 +275,19 @@ void turnLights(){
     lightsOn=!lightsOn;
     buttonDelay=0;
   }
+}
+
+void showCanvas(){
+   if(gpad.getButton("Botón 4").pressed()){
+      controlsMove= true;
+    }else{
+      controlsMove= false;
+    }
+    
+    if(gpad.getButton("Botón 5").pressed()){
+      controlsClick= true;
+    }else{
+      controlsClick = false;
+    }
+    
 }

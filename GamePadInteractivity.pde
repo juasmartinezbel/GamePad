@@ -28,13 +28,18 @@ int currentModel;
 int neededPoint;
 int lastNeeded=-2;
 boolean lightsOn=false;
+boolean controlsMove = false;
+boolean controlsClick = false;
+
 void setup() {
   selected=false;
   neededPoint=0;
   initControllers();
   //fullScreen(P3D);
   size(700,700,P3D);
-  //1. Set a scene and an Eye
+  buttons = createGraphics (100, 50);
+  
+  controllers = createGraphics (600, 500);
   scene = new Scene(this);
   scene.setType(Graph.Type.ORTHOGRAPHIC);
   eye = new Shape(scene);
@@ -65,12 +70,9 @@ void setup() {
 
 void draw() {
   background(0);
- 
+  
   if(buttonDelay<100){
     buttonDelay+=1;
-  }
-  if(rotationDelay<50){
-    rotationDelay+=1;
   }
   turnLights();
   if(lightsOn)
@@ -101,6 +103,11 @@ void draw() {
   
   reset();
   end();
+  showCanvas();
+  if(controlsMove||controlsClick)
+    controlcanvas();
+  else
+    l1r1canvas();
   
 }
 
