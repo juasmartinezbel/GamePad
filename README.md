@@ -1,4 +1,4 @@
-# Taller de Interacción: Gamepad como Interacción
+# Taller de Interacción: Gamepad como Interacción (En Desarrollo)
 ![Control](http://newmore.es/2803-large_default/mando-juego-con-vibracion-dual-shock-para-pc.jpg)
 
 ## Autor
