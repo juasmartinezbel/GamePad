@@ -11,7 +11,7 @@
 
 El objetivo del proyecto es ofrecer una forma de interactividad con el ambiente y objetos pertenecientes a un mundo creado en Processing con 6 grados de libertad, a través las opciones que ofrecen los botones, flechas y sticks de un control de juegos genérico.
 
-#### Por el momento, únicamente funciona con un control tipo Twin USB Controller configurado en Windows
+# Por el momento, únicamente funciona con un control tipo Twin USB Controller configurado en Windows
 
 A la hora de ejecutar el ambiente, se recibirá al usuario en un espacio similar a una galería, donde podrá recorrerlo con los controles, los cuales podrá ver si oprime los botones **R1** o **L1** como invita a hacer la parte superior de la pantalla. 
 
@@ -36,18 +36,21 @@ Se utilizan principalmente 4 pestañas para dividir el trabajo, más una de prue
 
 - **GamePadInteractivity:** Lugar principal donde se inicializa todo, se tiene el _setup_ y el _draw_ y se hacen aquí los llamados a las funcionalidades generales
 - **Controller:** Lugar donde se tienen todas las posibles combinaciones de botones y acciones que ejecuta dependiendo de la situación.
+- **Figure:** Clase que contendrá la información del modelo, como vertices, las cajas, y sus respectivos _PShape_ y _Shape_
 - **Model:** Lugar donde se tienen funciones relacionadas con la inicialización y uso de modelos _PShape_ y _Shape_
 - **ScreenCoordinates:** Lugar donde se tienen funciones para los gráficos que se tienen en frente de la pantalla, como la funcionalidad de los botones y el puntero.
 
 ## Cómo Funciona
 
-Lo primero que se hace es inicializar todas las cosas que guardarán valores relacionados cada uno de los modelos, como valores originales de los vertices, los PShapes, los Shapes, qué modelo se va a analizar, posiciones en las que se trasladarán los Shapes de los modelos y los Shapes de las mesas, etc.
+Lo primero que se hace es inicializar todas las cosas que guardarán valores relacionados cada uno de los modelos para cada respectivo **_Figure**, como valores originales de los vertices, los PShapes, los Shapes, qué modelo se va a analizar, posiciones en las que se trasladarán los Shapes de los modelos y los Shapes de las mesas, etc.
 
 A la hora de entrar al draw, se dibujará el ambiente 3D, si usa luces, las mallas, la cantidad de mesas, y cada uno de los modelos instanciados. Y al final dibujará en frente todo lo relacionado con el menú, como lo es el puntero y el mapeo de botones.
 
 El Draw siempre estará escuchando los botones del control, cuando se ejecuta una acción, siempre estará ejecuntando las funciones de la pestaña **Controller**, las cuales verificarán si el botón correspondiente ha sido oprimido. Para evitar sobresalto, se puso una variable _buttonDelay_ para evitar que las acciones de los botones se sobrelapen.
 
 Existe también un booleano principal que me divide la variable en dos, un _selected_ que, durante la ejecución del _draw_ me define si ejecutar acciones para mover la cámara o acciones para manipular el modelo si hay uno seleccionado.
+
+Además, si se oprimen los botones **_R1 y/o L1_** se podrá ver en pantalla el mapeo de botones respectivo y cómo interactuar con el ambiente y el modelol
 
 ## Desarrollo.
 
