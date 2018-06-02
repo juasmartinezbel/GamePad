@@ -8,7 +8,7 @@ float rx=0;float tx=0;
 
 float rz=0;float tz=0;
 float minimum=-1.5258789E-5;
-int ratium = 200;
+int ratium = 150;
 
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
@@ -75,29 +75,42 @@ void rotateCamera(){
 }
 
 void moveCamera(){
+  boolean run = gpad.getButton("Botón 11").pressed();
   if(gpad.getSlider("Eje Y").getValue()<minimum){
     eye.translateZNeg();
+    eye.translateZNeg();
+    if (run) eye.translateZNeg();
     //pointerS.translateZPos();
     //println("AAAAAAAAA");
   }else if(gpad.getSlider("Eje Y").getValue()>minimum){
     eye.translateZPos();
+    eye.translateZPos();
+    if (run) eye.translateZPos();
     //pointerS.translateZNeg();
     //println("bbb");
   }
   
   if(gpad.getSlider("Eje X").getValue()<minimum){
     eye.translateXPos();
+    eye.translateXPos();
+    if (run) eye.translateXPos();
     //pointerS.translateXNeg();
   }else if(gpad.getSlider("Eje X").getValue()>minimum){
     eye.translateXNeg();
+    eye.translateXNeg();
+    if(run)eye.translateXNeg();
     //pointerS.translateXPos();
   }
   
   if(gpad.getHat(0).up()){
     eye.translateYNeg();
+    eye.translateYNeg();
+    if(run)eye.translateYNeg();
     //pointerS.translateYPos();
   }else if(gpad.getHat(0).down()){
     eye.translateYPos();
+    eye.translateYPos();
+    if(run) eye.translateYPos();
     //pointerS.translateYNeg();
   }
 
@@ -222,7 +235,7 @@ void scaleModel(){
 ////////////////////////////////////////////////////////////
 
 void selectModel(int I){
-  if(gpad.getButton("Botón 2").pressed()&&buttonDelay>15){
+  if(gpad.getButton("Botón 2").pressed()&&buttonDelay>7){
     selected=true;
    scene.lookAt(new Vector(modelsPosition[I].x,modelsPosition[I].y,modelsPosition[I].z));
     currentModel = I;
@@ -231,10 +244,29 @@ void selectModel(int I){
 }
 
 void deselectModel(){
-  if(gpad.getButton("Botón 1").pressed()&&buttonDelay>15){
+  if(gpad.getButton("Botón 1").pressed()&&buttonDelay>7){
     removePoint(currentModel);
     currentModel = -2;
     buttonDelay=0;
     selected=false;
+  }
+}
+
+void reset(){
+  if(gpad.getButton("Botón 9").pressed()&&buttonDelay>7){
+    frameCount=-1;
+    buttonDelay=0;
+  }
+}
+void end(){
+  if(gpad.getButton("Botón 8").pressed()&&buttonDelay>7){
+    exit();
+  }
+}
+
+void turnLights(){
+  if(gpad.getButton("Botón 3").pressed()&&buttonDelay>7){
+    lightsOn=!lightsOn;
+    buttonDelay=0;
   }
 }

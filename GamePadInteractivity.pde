@@ -20,15 +20,16 @@ Shape boxes[] = new Shape[NO_MODELS];
 PVector [] modelsPosition = new PVector[NO_MODELS];
 PVector [] boxPosition = new PVector [NO_MODELS];
 PShape [] models = new PShape [NO_MODELS];
-
+float [] scales = {1,1,1,1,1,1,1,1};
 PShape pointer;
 Shape pointerS;
-boolean selected=false;
+boolean selected;
 int currentModel;
 int neededPoint;
 int lastNeeded=-2;
-
+boolean lightsOn=false;
 void setup() {
+  selected=false;
   neededPoint=0;
   initControllers();
   //fullScreen(P3D);
@@ -36,10 +37,10 @@ void setup() {
   //1. Set a scene and an Eye
   scene = new Scene(this);
   scene.setType(Graph.Type.ORTHOGRAPHIC);
-  eye = new OrbitShape(scene);
+  eye = new Shape(scene);
   scene.setEye(eye);
   scene.setRadius(VIEW_RADIUS);
-  scene.setFieldOfView(PI/15);
+  scene.setFieldOfView(PI/20);
   scene.setDefaultGrabber(eye);
   scene.fitBallInterpolation();
   ShapeVertex=new HashMap <Integer, HashMap<String, Float[]>>();
@@ -71,9 +72,12 @@ void draw() {
   if(rotationDelay<50){
     rotationDelay+=1;
   }
-  //lights();
+  turnLights();
+  if(lightsOn)
+    lights();
   //Draw Constraints
   //scene.drawAxes();
+  drawGrid();
   for(int i = 0; i < NO_MODELS; i++){ 
     pushMatrix();
       translate(modelsPosition[i].x,modelsPosition[i].y,modelsPosition[i].z);
@@ -95,8 +99,8 @@ void draw() {
     modelFunctions();
   }
   
-  
-  
+  reset();
+  end();
   
 }
 
@@ -175,21 +179,61 @@ void setTraslations(){
   * Y+ -> Baja en la Matriz
   * Z+ -> Acerca a la Camara
   */
-  int y = 30;
-  modelsPosition[0]=new PVector(100, y, 1700);
+  int y = 100;
+  int d=729;
+  int h = 1000;
+  int max = 1800;
+  modelsPosition[0]=new PVector(100, y, max);
   boxPosition[0] = new PVector (modelsPosition[0].x, modelsPosition[0].y-15, modelsPosition[0].z+15);
-  modelsPosition[1]=new PVector(0, y, 0);
+  modelsPosition[1]=new PVector(-h, y, max-d);
   boxPosition[1] = new PVector (modelsPosition[1].x, modelsPosition[1].y-30, modelsPosition[1].z+4);
-  modelsPosition[2]=new PVector(0, y, 0);
+  modelsPosition[2]=new PVector(h, y, max-d*2);
   boxPosition[2] = new PVector (modelsPosition[2].x-5, modelsPosition[2].y-77, modelsPosition[2].z+40);
   modelsPosition[3]=new PVector(0, -1000, 0);
   boxPosition[3] = new PVector (modelsPosition[3].x, modelsPosition[3].y, modelsPosition[3].z);
-  modelsPosition[4]=new PVector(0, y, 0);
+  modelsPosition[4]=new PVector(-h, y, max-d*3);
   boxPosition[4] = new PVector (modelsPosition[4].x, modelsPosition[4].y-90, modelsPosition[4].z);
-  modelsPosition[5]=new PVector(0, y, 0);
+  modelsPosition[5]=new PVector(h, y, max-d*4);
   boxPosition[5] = new PVector (modelsPosition[5].x, modelsPosition[5].y-90, modelsPosition[5].z);
-  modelsPosition[6]=new PVector(0, y, 0);
+  modelsPosition[6]=new PVector(-h, y, max-d*5);
   boxPosition[6] = new PVector (modelsPosition[6].x, modelsPosition[6].y-50, modelsPosition[6].z-10);
-  modelsPosition[7]=new PVector(100+310, 100, 1700);
+  modelsPosition[7]=new PVector(100+310, 100, max-100);
   boxPosition[7] = new PVector (modelsPosition[7].x, modelsPosition[7].y, modelsPosition[7].z);
+}
+
+void drawGrid(){
+  pushMatrix();
+    pushStyle();
+      stroke(255);
+      
+      translate(0,300,0);
+      rotateX(radians(90));
+      scene.drawGrid(100);
+    popStyle();
+  popMatrix();
+  
+  pushMatrix();
+    pushStyle();
+      stroke(255,0,0);
+      translate(0,-1700,-2000);
+      scene.drawGrid(40);
+    popStyle();
+  popMatrix();
+  pushMatrix();
+    pushStyle();
+      stroke(0,255,0);
+      rotateY(radians(90));
+      translate(0,-1700,-2000);
+      scene.drawGrid(40);
+    popStyle();
+  popMatrix();
+  
+  pushMatrix();
+    pushStyle();
+      stroke(0,0,255);
+      rotateY(radians(270));
+      translate(0,-1700,-2000);
+      scene.drawGrid(40);
+    popStyle();
+  popMatrix();
 }
