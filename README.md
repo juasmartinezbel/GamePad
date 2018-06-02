@@ -118,3 +118,4 @@ Una ves de vuelta al camino común y corriente dentro del **_draw()_**, lo únic
 ![Models](https://www.models-resource.com/resources/images/header/logo.png)
 - Librería para uso del Gamepad: [Game Control Plus](http://lagers.org.uk/gamecontrol/index.html)
 - Librería utilizada en clase: [Framesjs](https://github.com/VisualComputing/framesjs)
+- Funciones de Obtener fronteras e inicializar Shape para el PShape: [Framesjs example Interactive Fish](https://github.com/VisualComputing/framesjs/tree/processing/examples/ik/InteractiveFish)
