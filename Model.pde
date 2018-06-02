@@ -48,7 +48,7 @@ Shape setModel(int i, boolean FirstTime) {
   float max = max(abs(box[0].x() - box[1].x()), abs(box[0].y() - box[1].y()), abs(box[0].z() - box[1].z()));
   s.set(model);
   s.rotate(new Quaternion(new Vector(0, 0, 1), PI));
-  //s.scale(200.f*1.f/max);
+  s.scale(200.f*1.f/max);
   return s;
 }
 
@@ -168,21 +168,22 @@ void newCircle(int I, float i, float j, float k) {
 Shape getBox(int I){
   PShape model = models[I];
   Vector[] v= getBoundingBox(model);
-  println(v[0].toString());
-  println(v[1].toString());
+  
   stroke(255);
-  fill(0,255,0,40);
+  fill(0,255,0);
   //-3.2:2.9:-2.9
-  //noStroke();
-  //noFill();
+  noStroke();
+  noFill();
+  
   PShape bo = createShape(BOX,v[1].x()-v[0].x(),  v[0].y()-v[1].y(),  v[1].z()-v[0].z());
   Shape m = new OrbitShape(scene);
   
   float max = max(abs(v[0].x() - v[1].x()), abs(v[0].y() - v[1].y()), abs(v[0].z() - v[1].z()));
-  //bo.scale(200.f*1.f/max);
-  boxesVector.put(I, v); 
-  
-  
   m.set(bo);
+  float scale=200.f*1.f/max;
+  m.scale(scale);
+  v[0].multiply(scale);
+  v[1].multiply(scale);
+  boxesVector.put(I, v); 
   return m;
 }

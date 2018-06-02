@@ -7,22 +7,26 @@ import frames.processing.*;
 import org.gamecontrolplus.gui.*;
 import org.gamecontrolplus.*;
 import net.java.games.input.*;
-static final int NO_MODELS=2;
-static final int VIEW_RADIUS=200;
+static final int NO_MODELS=8;
+static final int VIEW_RADIUS=2000;
 
 Node eye;
 Scene scene;
-String shapePath[] ={"Arwing/arwing.obj", "Pommy/Pommy.obj", "boo/boo.obj", "star/star.obj", "heart/heart.obj", "eye/eye.obj", "eye/eye.obj"};
+String shapePath[] ={"Arwing/arwing.obj", "Pommy/Pommy.obj", "boo/boo.obj", "star/star.obj", "heart/heart.obj", "bee/bee.obj", "chicken/chicken.obj", "box/box.obj"};
+String tablePath = "table/otukue2.obj";
 Shape shape[] = new Shape[NO_MODELS];
 Shape boxes[] = new Shape[NO_MODELS];
-PVector [] modelsPosition = new PVector[7];
-PShape [] models = new PShape [7];
+PVector [] modelsPosition = new PVector[NO_MODELS];
+PVector [] boxPosition = new PVector [NO_MODELS];
+PShape [] models = new PShape [NO_MODELS];
+
 PShape pointer;
 Shape pointerS;
 boolean selected=false;
-int currentModel = 0;
+int currentModel;
 int neededPoint;
 int lastNeeded=-2;
+
 void setup() {
   neededPoint=0;
   initControllers();
@@ -42,10 +46,8 @@ void setup() {
   concidentialPoints = new HashMap <Integer, HashMap<String, ArrayList<String>>>(); 
   modelSize= new HashMap <Integer, Integer>();
   boxesVector = new HashMap <Integer, Vector[]>();
-  initPointer();
   rotation = new PVector [NO_MODELS];
   childSetted = new boolean [NO_MODELS];
-  
   for(int i=0;i<NO_MODELS;i++){
     childSetted[i]=false;
     rotation[i] = new PVector(0,0,0);
@@ -54,14 +56,7 @@ void setup() {
     shape[i] = setModel(i, true); 
     boxes[i] = getBox(i);
   }
-  
-  modelsPosition[0]=new PVector(0, 0, 0);
-  modelsPosition[1]=new PVector(0,150,0);
-  modelsPosition[2]=new PVector(-400, 300, 0);
-  modelsPosition[3]=new PVector(0, -800, 0);
-  modelsPosition[4]=new PVector(0,0, -800);
-  modelsPosition[5]=new PVector(400,0, 1600);
-  modelsPosition[6]=new PVector(-400,0, 1600);
+  setTraslations();
 }
 
 void draw() {
@@ -81,23 +76,22 @@ void draw() {
     pushMatrix();
       translate(modelsPosition[i].x,modelsPosition[i].y,modelsPosition[i].z);
       shape[i].draw();
+    popMatrix();
+    pushMatrix();
+      translate(boxPosition[i].x,boxPosition[i].y,boxPosition[i].z);
       boxes[i].draw();
     popMatrix();
   }
-  
-  /*noFill();
-  sphereDetail(10);
-  stroke(255);
-  sphere(VIEW_RADIUS);*/
   if(!selected){
     cameraFunctions();
+    pointer();
   }else{
     modelFunctions();
   }
   
   
-  selectModel();
-   pointer();
+  
+  
 }
 
 void modelFunctions(){
@@ -123,47 +117,30 @@ void modelFunctions(){
     changePoint();
     resetPoint();
   }
+  deselectModel();
 }
 
 void cameraFunctions(){
   if(lastNeeded!=-2){
       neededPoint=0;
-      removePoint(currentModel);
-    }
+  }
   lastNeeded=-2;
   rotateCamera();
   moveCamera();
   neededPoint=0;
-}
-
-void initPointer(){
-  
   
 }
-void pointer(){
-  pushMatrix();
-    pushStyle();
-      scene.beginScreenCoordinates();
-      noLights();
-      noStroke();
-      fill(255);
-      ellipse(height/2,width/2,10,10);
-      scene.endScreenCoordinates();
-    popStyle();
-  popMatrix();
-  //println("Pointer coordinates:\t"+scene.pointUnderPixel(0, 0).toString());
-  getBoxes();
-}
 
-void getBoxes(){
+
+
+int getBoxes(){
   //new Vector(0,0,0) 
   if(scene.pointUnderPixel(height/2, width/2)!=null){
     Vector o = scene.pointUnderPixel(height/2, width/2);
-    boolean found=false;
     for(int i: boxesVector.keySet()){ 
       Vector [] v = boxesVector.get(i);
       Vector [] u = new Vector [2];
-      PVector m = modelsPosition[i];
+      PVector m = boxPosition[i];
       u[0]=new Vector(v[0].x()+m.x,v[0].y()+m.y,v[0].z()+m.z);
       u[1]=new Vector(v[1].x()+m.x,v[1].y()+m.y,v[1].z()+m.z);
       
@@ -171,17 +148,35 @@ void getBoxes(){
       boolean Flag2=(u[1].y()>o.y()&&u[0].y()<o.y())||(u[1].y()<o.y()&&u[0].y()>o.y());
       boolean Flag3=(u[1].z()>o.z()&&u[0].z()<o.z())||(u[1].z()<o.z()&&u[0].z()>o.z());
       if(Flag1&&Flag2&&Flag3){
-        println("Está dentro del objeto: "+shapePath[i]);
-      }else{
-        println(u[0].toString()+":"+u[1].toString());
-        println("El puntero está en: "+o.toString());
+        return i;
       }
     }
-     
-  }else{
-    println("Nada");
   }
-  Frame F=(Frame) shape[0];
-  //println("Coordenadas Caja: "+ scene.projectedCoordinatesOf(new Vector(0,0,0), eye).toString());
-  //scene.lookAt(new Vector(0,0,0));
+  return -2;
+}
+
+void setTraslations(){
+  
+  /*
+  * x+ -> Hacia la Izquierda  x- -> Derecha
+  * y+ -> Hacia arriba        y- -> Abajo
+  * z+ -> Empuja              z- -> Jala
+  */
+  modelsPosition[0]=new PVector(0, 0, 0);
+  boxPosition[0] = new PVector (modelsPosition[0].x, modelsPosition[0].y-15, modelsPosition[0].z+15);
+  modelsPosition[1]=new PVector(200, 200, 0);
+  boxPosition[1] = new PVector (modelsPosition[1].x, modelsPosition[1].y-30, modelsPosition[1].z+4);
+  modelsPosition[2]=new PVector(-200, 400, 0);
+  boxPosition[2] = new PVector (modelsPosition[2].x-5, modelsPosition[2].y-77, modelsPosition[2].z+40);
+  modelsPosition[3]=new PVector(0, 600, 0);
+  boxPosition[3] = new PVector (modelsPosition[3].x, modelsPosition[3].y, modelsPosition[3].z);
+  modelsPosition[4]=new PVector(200, 800, 0);
+  boxPosition[4] = new PVector (modelsPosition[4].x, modelsPosition[4].y-90, modelsPosition[4].z);
+  modelsPosition[5]=new PVector(-200, 1000, 0);
+  boxPosition[5] = new PVector (modelsPosition[5].x, modelsPosition[5].y-90, modelsPosition[5].z);
+  modelsPosition[6]=new PVector(0, 1200, 0);
+  boxPosition[6] = new PVector (modelsPosition[6].x, modelsPosition[6].y-50, modelsPosition[6].z-10);
+  modelsPosition[7]=new PVector(200, 1400, 0);
+  boxPosition[7] = new PVector (modelsPosition[7].x, modelsPosition[7].y, modelsPosition[7].z);
+  
 }

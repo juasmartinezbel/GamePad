@@ -166,12 +166,6 @@ void movePoints(){
   changeVertex(u, xyz);
 }
 
-void selectModel(){
-  if(gpad.getButton("Botón 8").pressed()&&buttonDelay>15){
-    selected=!selected;
-    buttonDelay=0;
-  }
-}
 
 void resetPoint(){
   if(gpad.getButton("Botón 10").pressed()){
@@ -219,24 +213,27 @@ void scaleModel(){
   models[currentModel].scale(sx);
 }
 
-/*void changeModel(){
-    if(delay>5){
-      if(gpad.getButton("Botón 0").pressed()){
-        shape = new Shape(scene);
-        shape = setModel(shapePath);
-        delay=1;
-      }else if(gpad.getButton("Botón 1").pressed()){
-        shape = new Shape(scene);
-        shape = setModel(shapePath2);
-        delay=1;
-      }else if(gpad.getButton("Botón 2").pressed()){
-        shape = new Shape(scene);
-        shape = setModel(shapePath3);
-        delay=1;
-      }else if (gpad.getButton("Botón 3").pressed()){
-        shape = new Shape(scene);
-        shape = setModel(shapePath4);
-        delay=1;
-      }
-    }
-}*/
+
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+// Funciones para seleccionar el Modelo
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+
+void selectModel(int I){
+  if(gpad.getButton("Botón 2").pressed()&&buttonDelay>15){
+    selected=true;
+   scene.lookAt(new Vector(modelsPosition[I].x,modelsPosition[I].y,modelsPosition[I].z));
+    currentModel = I;
+    buttonDelay=0;
+  }
+}
+
+void deselectModel(){
+  if(gpad.getButton("Botón 1").pressed()&&buttonDelay>15){
+    removePoint(currentModel);
+    currentModel = -2;
+    buttonDelay=0;
+    selected=false;
+  }
+}
