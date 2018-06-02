@@ -14,6 +14,7 @@ Node eye;
 Scene scene;
 String shapePath[] ={"Arwing/arwing.obj", "Pommy/Pommy.obj", "boo/boo.obj", "star/star.obj", "heart/heart.obj", "bee/bee.obj", "chicken/chicken.obj", "box/box.obj"};
 String tablePath = "table/otukue2.obj";
+Shape table[] = new Shape[NO_MODELS];
 Shape shape[] = new Shape[NO_MODELS];
 Shape boxes[] = new Shape[NO_MODELS];
 PVector [] modelsPosition = new PVector[NO_MODELS];
@@ -38,7 +39,7 @@ void setup() {
   eye = new OrbitShape(scene);
   scene.setEye(eye);
   scene.setRadius(VIEW_RADIUS);
-  scene.setFieldOfView(PI/6);
+  scene.setFieldOfView(PI/15);
   scene.setDefaultGrabber(eye);
   scene.fitBallInterpolation();
   ShapeVertex=new HashMap <Integer, HashMap<String, Float[]>>();
@@ -48,6 +49,7 @@ void setup() {
   boxesVector = new HashMap <Integer, Vector[]>();
   rotation = new PVector [NO_MODELS];
   childSetted = new boolean [NO_MODELS];
+  
   for(int i=0;i<NO_MODELS;i++){
     childSetted[i]=false;
     rotation[i] = new PVector(0,0,0);
@@ -57,6 +59,7 @@ void setup() {
     boxes[i] = getBox(i);
   }
   setTraslations();
+  setTableModel();
 }
 
 void draw() {
@@ -69,13 +72,16 @@ void draw() {
     rotationDelay+=1;
   }
   //lights();
-  
   //Draw Constraints
   //scene.drawAxes();
   for(int i = 0; i < NO_MODELS; i++){ 
     pushMatrix();
       translate(modelsPosition[i].x,modelsPosition[i].y,modelsPosition[i].z);
       shape[i].draw();
+      if(i!=3&&i!=7){
+        translate(0,200,0);
+        table[i].draw();
+      }
     popMatrix();
     pushMatrix();
       translate(boxPosition[i].x,boxPosition[i].y,boxPosition[i].z);
@@ -163,21 +169,27 @@ void setTraslations(){
   * y+ -> Hacia arriba        y- -> Abajo
   * z+ -> Empuja              z- -> Jala
   */
-  modelsPosition[0]=new PVector(0, 0, 0);
-  boxPosition[0] = new PVector (modelsPosition[0].x, modelsPosition[0].y-15, modelsPosition[0].z+15);
-  modelsPosition[1]=new PVector(200, 200, 0);
-  boxPosition[1] = new PVector (modelsPosition[1].x, modelsPosition[1].y-30, modelsPosition[1].z+4);
-  modelsPosition[2]=new PVector(-200, 400, 0);
-  boxPosition[2] = new PVector (modelsPosition[2].x-5, modelsPosition[2].y-77, modelsPosition[2].z+40);
-  modelsPosition[3]=new PVector(0, 600, 0);
-  boxPosition[3] = new PVector (modelsPosition[3].x, modelsPosition[3].y, modelsPosition[3].z);
-  modelsPosition[4]=new PVector(200, 800, 0);
-  boxPosition[4] = new PVector (modelsPosition[4].x, modelsPosition[4].y-90, modelsPosition[4].z);
-  modelsPosition[5]=new PVector(-200, 1000, 0);
-  boxPosition[5] = new PVector (modelsPosition[5].x, modelsPosition[5].y-90, modelsPosition[5].z);
-  modelsPosition[6]=new PVector(0, 1200, 0);
-  boxPosition[6] = new PVector (modelsPosition[6].x, modelsPosition[6].y-50, modelsPosition[6].z-10);
-  modelsPosition[7]=new PVector(200, 1400, 0);
-  boxPosition[7] = new PVector (modelsPosition[7].x, modelsPosition[7].y, modelsPosition[7].z);
   
+  /*
+  * X+ -> Lleva hacia la derecha
+  * Y+ -> Baja en la Matriz
+  * Z+ -> Acerca a la Camara
+  */
+  int y = 30;
+  modelsPosition[0]=new PVector(100, y, 1700);
+  boxPosition[0] = new PVector (modelsPosition[0].x, modelsPosition[0].y-15, modelsPosition[0].z+15);
+  modelsPosition[1]=new PVector(0, y, 0);
+  boxPosition[1] = new PVector (modelsPosition[1].x, modelsPosition[1].y-30, modelsPosition[1].z+4);
+  modelsPosition[2]=new PVector(0, y, 0);
+  boxPosition[2] = new PVector (modelsPosition[2].x-5, modelsPosition[2].y-77, modelsPosition[2].z+40);
+  modelsPosition[3]=new PVector(0, -1000, 0);
+  boxPosition[3] = new PVector (modelsPosition[3].x, modelsPosition[3].y, modelsPosition[3].z);
+  modelsPosition[4]=new PVector(0, y, 0);
+  boxPosition[4] = new PVector (modelsPosition[4].x, modelsPosition[4].y-90, modelsPosition[4].z);
+  modelsPosition[5]=new PVector(0, y, 0);
+  boxPosition[5] = new PVector (modelsPosition[5].x, modelsPosition[5].y-90, modelsPosition[5].z);
+  modelsPosition[6]=new PVector(0, y, 0);
+  boxPosition[6] = new PVector (modelsPosition[6].x, modelsPosition[6].y-50, modelsPosition[6].z-10);
+  modelsPosition[7]=new PVector(100+310, 100, 1700);
+  boxPosition[7] = new PVector (modelsPosition[7].x, modelsPosition[7].y, modelsPosition[7].z);
 }

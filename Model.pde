@@ -52,6 +52,21 @@ Shape setModel(int i, boolean FirstTime) {
   return s;
 }
 
+void setTableModel() {
+  Shape s;
+  PShape model = loadShape(tablePath);
+  
+  s = new OrbitShape(scene);
+  Vector [] box = getBoundingBox(model);
+  float max = max(abs(box[0].x() - box[1].x()), abs(box[0].y() - box[1].y()), abs(box[0].z() - box[1].z()));
+  s.set(model);
+  s.rotate(new Quaternion(new Vector(0, 0, 1), PI));
+  s.scale(200.f*1.f/max);
+  for(int i=0;i<NO_MODELS;i++)
+    table[i]=s;
+}
+
+
 
 void setHashMap(int I) {
   PShape model = models[I];

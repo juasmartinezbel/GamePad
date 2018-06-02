@@ -112,30 +112,31 @@ void moveCamera(){
 
 int yx=0;
 void rotateModel(){
+  int rotateLevel=2;
   if(gpad.getSlider("Rotación Z").getValue()>minimum){
-     models[currentModel].rotateY(radians(-1));
-     rotation[currentModel].y-=1;
+     models[currentModel].rotateY(radians(-rotateLevel));
+     rotation[currentModel].y-=rotateLevel;
   }else if(gpad.getSlider("Rotación Z").getValue()<minimum){
-     models[currentModel].rotateY(radians(1));
-     rotation[currentModel].y+=1;
+     models[currentModel].rotateY(radians(rotateLevel));
+     rotation[currentModel].y+=rotateLevel;
   }
   
   if(gpad.getSlider("Eje Z").getValue()>minimum){
-    models[currentModel].rotateX(radians(1));
-    rotation[currentModel].x+=1;
+    models[currentModel].rotateX(radians(rotateLevel));
+    rotation[currentModel].x+=rotateLevel;
   }else if(gpad.getSlider("Eje Z").getValue()<minimum){
-    models[currentModel].rotateX(radians(-1));
-    rotation[currentModel].x-=1;
+    models[currentModel].rotateX(radians(-rotateLevel));
+    rotation[currentModel].x-=rotateLevel;
   }
 
   if(gpad.getButton("Botón 6").pressed()){
-    models[currentModel].rotateZ(radians(-1));
-    rotation[currentModel].z+=1;
+    models[currentModel].rotateZ(radians(-rotateLevel));
+    rotation[currentModel].z+=rotateLevel;
   }
   
   if(gpad.getButton("Botón 7").pressed()){       
-    models[currentModel].rotateZ(radians(1));
-    rotation[currentModel].z-=1;
+    models[currentModel].rotateZ(radians(rotateLevel));
+    rotation[currentModel].z-=rotateLevel;
   }
 }
 
@@ -189,11 +190,11 @@ void resetPoint(){
 
 
 void changePoint(){
-  if(gpad.getHat(0).left()&&buttonDelay>15){
+  if(gpad.getHat(0).left()&&buttonDelay>10){
       neededPoint--;
       buttonDelay=0;
     }
-    if(gpad.getHat(0).right()&&buttonDelay>15){
+    if(gpad.getHat(0).right()&&buttonDelay>10){
       neededPoint++;
       buttonDelay=0;
     }
