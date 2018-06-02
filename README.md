@@ -9,9 +9,9 @@
 
 ## Descripción del Proyecto y Objetivos
 
-Poder formular una forma de interactividad con el ambiente y los objetos creados en Processing, a través de los botones, flechas y sticks de un control de juegos genérico.
+El objetivo del proyecto es ofrecer una forma de interactividad con el ambiente y objetos pertenecientes a un mundo creado en Processing con 6 grados de libertad, a través las opciones que ofrecen los botones, flechas y sticks de un control de juegos genérico.
 
-Por el momento, únicamente funciona con un control tipo Twin USB Controller configurado en Windows
+#### Por el momento, únicamente funciona con un control tipo Twin USB Controller configurado en Windows
 
 A la hora de ejecutar el ambiente, se recibirá al usuario en un espacio similar a una galería, donde podrá recorrerlo con los controles, los cuales podrá ver si oprime los botones **R1** o **L1** como invita a hacer la parte superior de la pantalla. 
 
@@ -24,7 +24,7 @@ Como se muestra, el usuario podrá trasladarse en los ejes **_X, Y & Z_**, y rot
 
 ![translate](https://pbs.twimg.com/media/DesvccHW4AAmKwK.jpg)
 
-A la hora de seleccionar un modelo cuando el puntero se pone rojo, existirá otro tipo de interacción, donde podremos manipular dicho modelo seleccionado, podremos rotarlo en los ejes **_X, Y & Z_** y, aunque no podamos trasladar el modelo de su posición sobre cada una de las mesas, podremos modificar sus vertices debidamente resaltados en los ejes **_X, Y & Z_**
+A la hora de seleccionar un modelo cuando el puntero se pone rojo, existirá otro tipo de interacción, donde podremos manipular dicho modelo seleccionado, podremos rotarlo en los ejes **_X, Y & Z_** y, aunque no podamos trasladar el modelo de su posición sobre cada una de las mesas, podremos modificar sus vertices debidamente resaltados en los ejes **_X, Y & Z_**, asegurando así una vez más, 6 grados de libertad para tratar con el modelo.
 
 ![model](https://pbs.twimg.com/media/Desw7omWAAEYC4o.jpg)
 
