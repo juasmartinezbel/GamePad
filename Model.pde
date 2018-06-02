@@ -1,12 +1,19 @@
-HashMap <Integer, HashMap<String, Float[]>> ShapeVertex;
-HashMap <Integer, HashMap<String, PVector>> OriginalVertex;
-HashMap <Integer, Integer> modelSize;
-HashMap <Integer, Vector[]> boxesVector;
-PVector [] rotation;
-boolean [] childSetted;
+/****************************
+*
+* Taller Interactividad: Interacción con GamePad
+* Por Juan Sebastián Martínez Beltrán
+* Por el momento solo funciona con Twin USB GamePad configurado en Windows
+* 
+* Pestaña Model: Funciones con respecto a inicializar y crear modelos 
+* Las operaciones de esta pestaña fueron tomadas de: https://github.com/VisualComputing/framesjs/blob/processing/examples/ik/InteractiveFish/InteractiveFish.pde
+*
+*****************************/
 
-HashMap <Integer, HashMap<String, ArrayList<String>>> concidentialPoints;
-
+/**
+*
+* getBoundingBox(): Me obtiene los máximos y mínimos de un modelo.
+*
+**/
 
 Vector[] getBoundingBox(PShape shape) {
   Vector v[] = new Vector[2];
@@ -36,15 +43,20 @@ Vector[] getBoundingBox(PShape shape) {
   return v;
 }
 
-
+/**
+*
+* getBoundingBox(): Se relaciona el modelo con el Shape
+*
+**/
 Shape setModel(int i, boolean FirstTime) {
   Shape s;
-  PShape model = models[i];
+  PShape model = figures[i].model;
   if (FirstTime) {
-    setHashMap(i);
+    figures[i].setHashMap();
   }
   s = new Shape(scene);
   Vector [] box = getBoundingBox(model);
+  figures[i].boundaries=box;
   float max = max(abs(box[0].x() - box[1].x()), abs(box[0].y() - box[1].y()), abs(box[0].z() - box[1].z()));
   s.set(model);
   s.rotate(new Quaternion(new Vector(0, 0, 1), PI));
@@ -52,10 +64,15 @@ Shape setModel(int i, boolean FirstTime) {
   return s;
 }
 
+/**
+*
+* setTableModel(): Crea una mesa para el modelo  
+*
+**/
+
 void setTableModel() {
   Shape s;
   PShape model = loadShape(tablePath);
-  
   s = new Shape(scene);
   Vector [] box = getBoundingBox(model);
   float max = max(abs(box[0].x() - box[1].x()), abs(box[0].y() - box[1].y()), abs(box[0].z() - box[1].z()));
@@ -63,155 +80,75 @@ void setTableModel() {
   s.rotate(new Quaternion(new Vector(0, 0, 1), PI));
   s.scale(200.f*1.f/max);
   for(int i=0;i<NO_MODELS;i++)
-    table[i]=s;
+    figures[i].table=s;
+}
+
+/**
+*
+* setTraslations(): Define las traslaciones de los modelos 
+*
+**/
+void setTraslations(){
+  
+  /*
+  * x+ -> Hacia la Izquierda  x- -> Derecha
+  * y+ -> Hacia arriba        y- -> Abajo
+  * z+ -> Empuja              z- -> Jala
+  */
+  
+  /*
+  * X+ -> Lleva hacia la derecha
+  * Y+ -> Baja en la Matriz
+  * Z+ -> Acerca a la Camara
+  */
+  int y = 100;
+  int d=729;
+  int h = 1000;
+  int max = 1800;
+  figures[0].modelsPosition=new PVector(100, y, max);
+  figures[0].boxPosition = new PVector (figures[0].modelsPosition.x,   figures[0].modelsPosition.y-15,   figures[0].modelsPosition.z+15);
+  figures[1].modelsPosition=new PVector(-h, y, max-d);
+  figures[1].boxPosition = new PVector (figures[1].modelsPosition.x,   figures[1].modelsPosition.y-30,   figures[1].modelsPosition.z+4);
+  figures[2].modelsPosition=new PVector(h, y, max-d*2);
+  figures[2].boxPosition = new PVector (figures[2].modelsPosition.x-5, figures[2].modelsPosition.y-77,   figures[2].modelsPosition.z+40);
+  figures[3].modelsPosition=new PVector(0, -1000, 0);
+  figures[3].boxPosition = new PVector (figures[3].modelsPosition.x,   figures[3].modelsPosition.y,      figures[3].modelsPosition.z);
+  figures[4].modelsPosition=new PVector(-h, y, max-d*3);
+  figures[4].boxPosition = new PVector (figures[4].modelsPosition.x,   figures[4].modelsPosition.y-90,   figures[4].modelsPosition.z);
+  figures[5].modelsPosition=new PVector(h, y, max-d*4);
+  figures[5].boxPosition = new PVector (figures[5].modelsPosition.x,   figures[5].modelsPosition.y-90,   figures[5].modelsPosition.z);
+  figures[6].modelsPosition=new PVector(-h, y, max-d*5);
+  figures[6].boxPosition = new PVector (figures[6].modelsPosition.x,      figures[6].modelsPosition.y-50,   figures[6].modelsPosition.z-10);
+  figures[7].modelsPosition=new PVector(100+310, 100, max-100);
+  figures[7].boxPosition = new PVector (figures[7].modelsPosition.x,      figures[7].modelsPosition.y,     figures[7].modelsPosition.z);
 }
 
 
-
-void setHashMap(int I) {
-  PShape model = models[I];
-  HashMap<String, Float[]> m = new HashMap<String, Float[]>();
-  HashMap<String, PVector> n = new HashMap<String, PVector>();
-  HashMap<String,  ArrayList<String>> l = new HashMap<String,  ArrayList<String>>();
-  
-
-  int size=0;
-  for (int i = 0; i<model.getChildCount(); i++) {
-    for (int j = 0; j<model.getChild(i).getVertexCount(); j++) {
-      Float [] xyz={0.0, 0.0, 0.0};
-      PVector v= model.getChild(i).getVertex(j);
-      model.getChild(i).setVertex(j,  Float.valueOf(String.format("%.1f", v.x).replace(',', '.')), 
-                                      Float.valueOf(String.format("%.1f", v.y).replace(',', '.')), 
-                                      Float.valueOf(String.format("%.1f", v.z).replace(',', '.')));
-      v=model.getChild(i).getVertex(j);
-      String s = v.x+":"+v.y+":"+v.z;
-      String k = i+":"+j;
-      m.put(s, xyz);
-      n.put(s, v);
-
-      ArrayList <String> a = new ArrayList <String>();
-      if(l.containsKey(s)){
-        a = l.get(s);
+/**
+*
+* getBoxes(): Me verifica si el puntero está dando contra el área de una caja
+*
+**/
+int getBoxes(){
+  //new Vector(0,0,0) 
+  if(scene.pointUnderPixel(height/2, width/2)!=null){
+    Vector o = scene.pointUnderPixel(height/2, width/2);
+    for(int i=0; i<NO_MODELS; i++){
+      
+      Vector [] v = figures[i].boxVector;
+      Vector [] u = new Vector [2];
+      PVector m = figures[i].boxPosition;
+      u[0]=new Vector(v[0].x()+m.x,v[0].y()+m.y,v[0].z()+m.z);
+      u[1]=new Vector(v[1].x()+m.x,v[1].y()+m.y,v[1].z()+m.z);
+      u[0].add(-20,-20,-20);
+      u[1].add(20,20,20);
+      boolean Flag1=(u[1].x()>o.x()&&u[0].x()<o.x())||(u[1].x()<o.x()&&u[0].x()>o.x());
+      boolean Flag2=(u[1].y()>o.y()&&u[0].y()<o.y())||(u[1].y()<o.y()&&u[0].y()>o.y());
+      boolean Flag3=(u[1].z()>o.z()&&u[0].z()<o.z())||(u[1].z()<o.z()&&u[0].z()>o.z());
+      if(Flag1&&Flag2&&Flag3){
+        return i;
       }
-      a.add(k);
-      l.put(s,a);
     }
   }
-  size=l.size();
-  
-  OriginalVertex.put(I, n);
-  ShapeVertex.put(I, m);
-  modelSize.put(I, size-1);
-  concidentialPoints.put(I,l);
-}
-
-
-
-////////////////////////////////////////////////////////////
-// Funciones para mover los vertices
-////////////////////////////////////////////////////////////
-
-void changeVertex(String u, Float[] v){
-  PShape model = models[currentModel];
-  HashMap<String,  ArrayList<String>> l = concidentialPoints.get(currentModel);
-  ArrayList<String> a = l.get(u);
-  PVector w = OriginalVertex.get(currentModel).get(u);
-  for(String s : a){
-    int i = Integer.valueOf(s.split(":")[0]);
-    int j = Integer.valueOf(s.split(":")[1]);
-    model.getChild(i).setVertex(j, v[0]+w.x,v[1]+w.y,v[2]+w.z);
-  }
-}
-
-
-
-////////////////////////////////////////////////////////////
-// Funciones para elegir nuevos puntos
-////////////////////////////////////////////////////////////
-void removePoint(int I){
-  PShape model = models[I];
-  model.removeChild(model.getChildCount()-1);
-  childSetted[I]=false;
-}
-
-
-void changePoint(int I, int needed){
-  PShape model = models[I];
-  model.removeChild(model.getChildCount()-1);
-  ArrayList<String> f =  new ArrayList<String>(concidentialPoints.get(I).keySet());
-  String u = f.get(needed);
-  float i = Float.valueOf(u.split(":")[0]);
-  float j = Float.valueOf(u.split(":")[1]);
-  float k = Float.valueOf(u.split(":")[2]);
-  newCircle(I, i, j, k);
- 
-}
-
-
-void firstCircle(int I){
-  ArrayList<String> f = new ArrayList<String>(concidentialPoints.get(I).keySet());
-  String u = f.get(0);
-  float i = Float.valueOf(u.split(":")[0]);
-  float j = Float.valueOf(u.split(":")[1]);
-  float k = Float.valueOf(u.split(":")[2]);
-  newCircle(I, i, j, k);
-}
-
-void newCircle(int I, float i, float j, float k) {
-  String s = i+":"+j+":"+k;
-  println(I);
-  println(s);
-  PShape model = models[I];
-  HashMap<String, Float[]> m = ShapeVertex.get(I);
-  PVector t = OriginalVertex.get(I).get(s);
-  Float [] xyz = m.get(s); 
-  
-  translate(modelsPosition[I].x, modelsPosition[I].y, modelsPosition[I].z);
-  pushStyle();
-  Vector u = new Vector(t.x+xyz[0], t.y+xyz[1], t.z+xyz[2]);
-  //u.add(modelsPosition[I].x,modelsPosition[I].y,modelsPosition[I].z);
-  fill(0,255,0);
-  stroke(0,255,0);
-  float radious = 0.50;
-  if(I==1||I==2){
-    radious = 0.1;
-  }else if(I==3||I==7||I==4){
-    radious = 0.09;
-  }else if(I==6){
-    radious = 0.05;
-  }else if(I==5){
-    radious = 3;
-  }
-  PShape o=createShape(SPHERE, radious);
-  //PShape o=createShape(ELLIPSE, 0, 0, 1000, 1000);
-  model.addChild(o);
-  o.translate(u.x(), u.y(), u.z());
-  popStyle();
-}
-
-////////////////////////////////////////////////////////////
-// Funciones para sacar la caja de un modelo
-////////////////////////////////////////////////////////////
-Shape getBox(int I){
-  PShape model = models[I];
-  Vector[] v= getBoundingBox(model);
-  pushStyle();
-  //stroke(255);
-  //fill(0,255,0);
-  //-3.2:2.9:-2.9
-  noStroke();
-  noFill();
-  
-  PShape bo = createShape(BOX,v[1].x()-v[0].x(),  v[0].y()-v[1].y(),  v[1].z()-v[0].z());
-  Shape m = new Shape(scene);
-  
-  float max = max(abs(v[0].x() - v[1].x()), abs(v[0].y() - v[1].y()), abs(v[0].z() - v[1].z()));
-  m.set(bo);
-  float scale=200.f*1.f/max;
-  m.scale(scale);
-  v[0].multiply(scale);
-  v[1].multiply(scale);
-  boxesVector.put(I, v); 
-  popStyle();
-  return m;
+  return -2;
 }

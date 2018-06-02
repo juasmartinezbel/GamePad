@@ -1,5 +1,22 @@
+/****************************
+*
+* Taller Interactividad: Interacción con GamePad
+* Por Juan Sebastián Martínez Beltrán
+* Por el momento solo funciona con Twin USB GamePad configurado en Windows
+* 
+* Pestaña Screen Coordinates: Funciones con respecto a las imagenes que aparecen en pantalla 
+*
+*****************************/
+
+//Canvas a mostrar en pantalla
 PGraphics buttons;
 PGraphics controllers;
+
+/**
+*
+* pointer(): Me crea un puntero y me verifica si cae sobre algún objeto de interes
+*
+**/
 void pointer(){
   int found= getBoxes();
   pushMatrix();
@@ -20,17 +37,29 @@ void pointer(){
   popMatrix();
 }
 
+/**
+*
+* l1r1canvas(): Me muestra el canvas que incita al usuario a oprimir L1 o R1
+*
+**/
 void l1r1canvas(){
-  scene.beginScreenCoordinates();
-  buttons.beginDraw();
-  PImage bg = loadImage("buttons.gif");
-  bg.resize(100,50);
-  buttons.background(bg);
-  buttons.endDraw();
-  image(buttons, 0, 0); 
-  scene.endScreenCoordinates();
+  if(frameCount<150){
+    scene.beginScreenCoordinates();
+    buttons.beginDraw();
+    PImage bg = loadImage("buttons.gif");
+    bg.resize(100,50);
+    buttons.background(bg);
+    buttons.endDraw();
+    image(buttons, 0, 0); 
+    scene.endScreenCoordinates();
+  }
 }
 
+/**
+*
+* controlcanvas(): Me muestra el canvas que me muestra los controles
+*
+**/
 void controlcanvas(){
   String c="";
   if(controlsMove==true){

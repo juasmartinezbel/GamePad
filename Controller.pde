@@ -1,3 +1,13 @@
+/****************************
+*
+* Taller Interactividad: Interacción con GamePad
+* Por Juan Sebastián Martínez Beltrán
+* Por el momento solo funciona con Twin USB GamePad configurado en Windows
+* 
+* Pestaña Controller: Operaciones de inicialización y operación de los controles
+*
+*****************************/
+
 ControlIO control;
 ControlDevice gpad;
 int buttonDelay=0;
@@ -8,7 +18,7 @@ float rx=0;float tx=0;
 
 float rz=0;float tz=0;
 float minimum=-1.5258789E-5;
-int ratium = 150;
+int ratium = 200;
 
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
@@ -80,38 +90,30 @@ void moveCamera(){
     eye.translateZNeg();
     eye.translateZNeg();
     if (run) { eye.translateZNeg();  eye.translateZNeg(); }
-    //pointerS.translateZPos();
-    //println("AAAAAAAAA");
   }else if(gpad.getSlider("Eje Y").getValue()>minimum){
     eye.translateZPos();
     eye.translateZPos();
     if (run){ eye.translateZPos(); eye.translateZPos();}
-    //pointerS.translateZNeg();
-    //println("bbb");
   }
   
   if(gpad.getSlider("Eje X").getValue()<minimum){
     eye.translateXPos();
     eye.translateXPos();
     if (run) {eye.translateXPos(); eye.translateXPos();}
-    //pointerS.translateXNeg();
   }else if(gpad.getSlider("Eje X").getValue()>minimum){
     eye.translateXNeg();
     eye.translateXNeg();
     if(run){eye.translateXNeg();eye.translateXNeg();}
-    //pointerS.translateXPos();
   }
   
   if(gpad.getHat(0).up()){
     eye.translateYNeg();
     eye.translateYNeg();
     if(run){eye.translateYNeg();eye.translateYNeg();}
-    //pointerS.translateYPos();
   }else if(gpad.getHat(0).down()){
     eye.translateYPos();
     eye.translateYPos();
     if(run) {eye.translateYPos();eye.translateYPos();}
-    //pointerS.translateYNeg();
   }
 
 
@@ -127,37 +129,31 @@ int yx=0;
 void rotateModel(){
   int rotateLevel=2;
   if(gpad.getSlider("Rotación Z").getValue()>minimum){
-     models[currentModel].rotateY(radians(-rotateLevel));
-     rotation[currentModel].y-=rotateLevel;
+     figures[currentModel].model.rotateY(radians(-rotateLevel));
   }else if(gpad.getSlider("Rotación Z").getValue()<minimum){
-     models[currentModel].rotateY(radians(rotateLevel));
-     rotation[currentModel].y+=rotateLevel;
+     figures[currentModel].model.rotateY(radians(rotateLevel));
   }
   
   if(gpad.getSlider("Eje Z").getValue()>minimum){
-    models[currentModel].rotateX(radians(rotateLevel));
-    rotation[currentModel].x+=rotateLevel;
+    figures[currentModel].model.rotateX(radians(rotateLevel));
   }else if(gpad.getSlider("Eje Z").getValue()<minimum){
-    models[currentModel].rotateX(radians(-rotateLevel));
-    rotation[currentModel].x-=rotateLevel;
+    figures[currentModel].model.rotateX(radians(-rotateLevel));
   }
 
   if(gpad.getButton("Botón 6").pressed()){
-    models[currentModel].rotateZ(radians(-rotateLevel));
-    rotation[currentModel].z+=rotateLevel;
+    figures[currentModel].model.rotateZ(radians(-rotateLevel));
   }
   
   if(gpad.getButton("Botón 7").pressed()){       
-    models[currentModel].rotateZ(radians(rotateLevel));
-    rotation[currentModel].z-=rotateLevel;
+    figures[currentModel].model.rotateZ(radians(rotateLevel));
   }
 }
 
 void movePoints(){
-  HashMap<String, Float[]> m = ShapeVertex.get(currentModel);
-  ArrayList<String> f =  new ArrayList<String>(concidentialPoints.get(currentModel).keySet());
+  
+  ArrayList<String> f =  new ArrayList<String>(figures[currentModel].concidentialPoints.keySet());
   String u = f.get(neededPoint);
-  Float [] xyz = m.get(u); 
+  Float [] xyz = figures[currentModel].ShapeVertex.get(u); 
   
   if(gpad.getSlider("Eje Y").getValue()<minimum){
     xyz[2]-=0.2;
@@ -176,26 +172,23 @@ void movePoints(){
   }else if(gpad.getHat(0).down()){
     xyz[1]-=0.2;
   }
-  m.put(u,xyz);
-  changeVertex(u, xyz);
+  figures[currentModel].ShapeVertex.put(u,xyz);
+  figures[currentModel].changeVertex(u, xyz);
 }
 
 
 void resetPoint(){
   if(gpad.getButton("Botón 10").pressed()){
-      HashMap<String, Float[]> m = ShapeVertex.get(currentModel);
-      ArrayList<String> f =  new ArrayList<String>(concidentialPoints.get(currentModel).keySet());
+      
+      ArrayList<String> f =  new ArrayList<String>(figures[currentModel].concidentialPoints.keySet());
       String u = f.get(neededPoint);
       Float [] xyz = {0.0,0.0,0.0};
-      m.put(u,xyz);
-      changeVertex(u, xyz);
+      figures[currentModel].ShapeVertex.put(u,xyz);
+      figures[currentModel].changeVertex(u, xyz);
   }
   
   if(gpad.getButton("Botón 11").pressed()){
-    rotation[currentModel].y=0;
-    rotation[currentModel].x=0;
-    rotation[currentModel].z=0;
-    models[currentModel].resetMatrix();
+    figures[currentModel].model.resetMatrix();
   }
   
 }
@@ -224,7 +217,7 @@ void scaleModel(){
   }else{
     sx=1;
   }
-  models[currentModel].scale(sx);
+  figures[currentModel].model.scale(sx);
 }
 
 
@@ -237,7 +230,7 @@ void scaleModel(){
 void selectModel(int I){
   if(gpad.getButton("Botón 2").pressed()&&buttonDelay>7){
     selected=true;
-   scene.lookAt(new Vector(modelsPosition[I].x,modelsPosition[I].y,modelsPosition[I].z));
+   scene.lookAt(new Vector(figures[I].modelsPosition.x,figures[I].modelsPosition.y,figures[I].modelsPosition.z));
     currentModel = I;
     buttonDelay=0;
   }
@@ -245,7 +238,7 @@ void selectModel(int I){
 
 void deselectModel(){
   if(gpad.getButton("Botón 1").pressed()&&buttonDelay>7){
-    removePoint(currentModel);
+    figures[currentModel].removePoint();
     currentModel = -2;
     buttonDelay=0;
     selected=false;
