@@ -1,4 +1,4 @@
-# Taller de Interacción: Gamepad como Interacción (En Desarrollo)
+# Taller de Interacción: Gamepad como Interacción
 ![Control](http://newmore.es/2803-large_default/mando-juego-con-vibracion-dual-shock-para-pc.jpg)
 
 ## Autor
@@ -9,9 +9,7 @@
 
 ## Descripción del Proyecto y Objetivos
 
-El objetivo del proyecto es ofrecer una forma de interactividad con el ambiente y objetos pertenecientes a un mundo creado en Processing con 6 grados de libertad, a través las opciones que ofrecen los botones, flechas y sticks de un control de juegos genérico.
-
-# Por el momento, únicamente funciona con un control tipo Twin USB Controller configurado en Windows
+El objetivo del proyecto es ofrecer una forma de interactividad con el ambiente y objetos pertenecientes a un mundo creado en Processing con 6 grados de libertad, a través las opciones que ofrecen los botones, flechas y sticks de un control de juegos genérico **el cual se deberá configurar a la hora de iniciar la aplicación.**
 
 A la hora de ejecutar el ambiente, se recibirá al usuario en un espacio similar a una galería, donde podrá recorrerlo con los controles, los cuales podrá ver si oprime los botones **R1** o **L1** como invita a hacer la parte superior de la pantalla. 
 
@@ -42,7 +40,17 @@ Se utilizan principalmente 4 pestañas para dividir el trabajo, más una de prue
 
 ## Cómo Funciona
 
-Lo primero que se hace es inicializar todas las cosas que guardarán valores relacionados cada uno de los modelos para cada respectivo **_Figure**, como valores originales de los vertices, los PShapes, los Shapes, qué modelo se va a analizar, posiciones en las que se trasladarán los Shapes de los modelos y los Shapes de las mesas, etc.
+Lo primero que se debe hacer, es configurar los controles gracias a la librería **Game Controller Plus** la cual provee una interfaz para relacionar los botones del control de entrada (Derecha, cuando oprima un botón o mueva un stick, estas se iluminarán) con los que utilizará el programa (Izquierda) cuando inicie la aplicación. Una vez terminado el mapeo, se le dará click a **Verify** y posteriormente a **USE**, opciones en la parte superior derecha de la pantalla verde. En caso de cometer un error, es preferible salir del programa e intentarlo de nuevo.
+
+![controller_config](https://pbs.twimg.com/media/Deucu60X4AA57Zz.jpg)
+
+Tenga en cuenta que una vez configurado un control, siempre que lea este usará la configuración ya guardada. **Para reiniciar la configuración, hay tomar el archivo gamepad_backup del directorio raiz, y reemplazar el archivo gamepad_config por una copia de este, cambiandole el nombre**
+Para hacer este ejercicio, se configurará basado en la distribución de un control de Playstation como el que se ve a continuación:
+
+![ps4](http://www.capcom.co.jp/manual/bhorc/en/img/map/02-01-17_1.jpg)
+
+
+Luego de que todo esté en orden, lo que se hace es inicializar todas las cosas que guardarán valores relacionados cada uno de los modelos para cada respectivo **_Figure**, como valores originales de los vertices, los PShapes, los Shapes, qué modelo se va a analizar, posiciones en las que se trasladarán los Shapes de los modelos y los Shapes de las mesas, etc.
 
 A la hora de entrar al draw, se dibujará el ambiente 3D, si usa luces, las mallas, la cantidad de mesas, y cada uno de los modelos instanciados. Y al final dibujará en frente todo lo relacionado con el menú, como lo es el puntero y el mapeo de botones.
 
