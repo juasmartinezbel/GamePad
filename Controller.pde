@@ -2,14 +2,15 @@
 *
 * Taller Interactividad: Interacción con GamePad
 * Por Juan Sebastián Martínez Beltrán
-* Por el momento solo funciona con Twin USB GamePad configurado en Windows
 * 
 * Pestaña Controller: Operaciones de inicialización y operación de los controles
 *
 *****************************/
 
 ControlIO control;
+Configuration config;
 ControlDevice gpad;
+
 int buttonDelay=0;
 int rotationDelay=0;
 float ry=0;float ty=0;
@@ -17,7 +18,7 @@ float ry=0;float ty=0;
 float rx=0;float tx=0;
 
 float rz=0;float tz=0;
-float minimum=-1.5258789E-5;
+float minimum=0;//-1.5258789E-5;
 int ratium = 200;
 
 ////////////////////////////////////////////////////////////
@@ -27,18 +28,10 @@ int ratium = 200;
 ////////////////////////////////////////////////////////////
 void initControllers(){
   int init=0;
+  // Initialise the ControlIO
   control = ControlIO.getInstance(this);
-  for(ControlDevice s : control.getDevices()){
-    String g=s.toString();
-    g=g.replaceAll(" ","");
-    println(g);
-    if(g.equals("TwinUSBGamepad")){
-      break;
-    }
-    init++;
-  }
   // Find a device that matches the configuration file
-  gpad = control.getDevice(init);
+  gpad = control.getMatchedDevice("gamepad_config");
   if (gpad == null) {
     println("No suitable device configured");
     System.exit(-1); // End the program NOW!
@@ -54,53 +47,53 @@ void initControllers(){
 ////////////////////////////////////////////////////////////
 void rotateCamera(){
     int rotationRatium = ratium;
-    if(gpad.getButton("Botón 10").pressed()){
+    if(gpad.getButton("STICKI").pressed()){
       rotationRatium = 90;
     }
-    if(gpad.getSlider("Rotación Z").getValue()<minimum){
+    if(gpad.getSlider("EJEXD").getValue()<minimum){
       eye.rotate(new Quaternion(new Vector(0, 1, 0), PI/rotationRatium));
       rotationDelay=0;
-    }else if(gpad.getSlider("Rotación Z").getValue()>minimum){
+    }else if(gpad.getSlider("EJEXD").getValue()>minimum){
       eye.rotate(new Quaternion(new Vector(0, -1, 0), PI/rotationRatium));
       rotationDelay=0;
     }
     
-    if(gpad.getSlider("Eje Z").getValue()<minimum){
+    if(gpad.getSlider("EJEYD").getValue()<minimum){
       eye.rotate(new Quaternion(new Vector(-1, 0, 0), PI/rotationRatium));
       rotationDelay=0;
-    }else if(gpad.getSlider("Eje Z").getValue()>minimum){
+    }else if(gpad.getSlider("EJEYD").getValue()>minimum){
       eye.rotate(new Quaternion(new Vector(1, 0, 0), PI/rotationRatium));
       rotationDelay=0;
     }
   
-    if(gpad.getButton("Botón 7").pressed()){
+    if(gpad.getButton("R2").pressed()){
       eye.rotateZPos();
       rotationDelay=0;
     }
   
-    if(gpad.getButton("Botón 6").pressed()){       
+    if(gpad.getButton("L2").pressed()){       
       eye.rotateZNeg();
       rotationDelay=0;
     }
 }
 
 void moveCamera(){
-  boolean run = gpad.getButton("Botón 11").pressed();
-  if(gpad.getSlider("Eje Y").getValue()<minimum){
+  boolean run = gpad.getButton("STICKD").pressed();
+  if(gpad.getSlider("EJEYI").getValue()<minimum){
     eye.translateZNeg();
     eye.translateZNeg();
     if (run) { eye.translateZNeg();  eye.translateZNeg(); }
-  }else if(gpad.getSlider("Eje Y").getValue()>minimum){
+  }else if(gpad.getSlider("EJEYI").getValue()>minimum){
     eye.translateZPos();
     eye.translateZPos();
     if (run){ eye.translateZPos(); eye.translateZPos();}
   }
   
-  if(gpad.getSlider("Eje X").getValue()<minimum){
+  if(gpad.getSlider("EJEXI").getValue()<minimum){
     eye.translateXPos();
     eye.translateXPos();
     if (run) {eye.translateXPos(); eye.translateXPos();}
-  }else if(gpad.getSlider("Eje X").getValue()>minimum){
+  }else if(gpad.getSlider("EJEXI").getValue()>minimum){
     eye.translateXNeg();
     eye.translateXNeg();
     if(run){eye.translateXNeg();eye.translateXNeg();}
@@ -128,23 +121,23 @@ void moveCamera(){
 int yx=0;
 void rotateModel(){
   int rotateLevel=2;
-  if(gpad.getSlider("Rotación Z").getValue()>minimum){
+  if(gpad.getSlider("EJEXD").getValue()>minimum){
      figures[currentModel].model.rotateY(radians(-rotateLevel));
-  }else if(gpad.getSlider("Rotación Z").getValue()<minimum){
+  }else if(gpad.getSlider("EJEXD").getValue()<minimum){
      figures[currentModel].model.rotateY(radians(rotateLevel));
   }
   
-  if(gpad.getSlider("Eje Z").getValue()>minimum){
+  if(gpad.getSlider("EJEYD").getValue()>minimum){
     figures[currentModel].model.rotateX(radians(rotateLevel));
-  }else if(gpad.getSlider("Eje Z").getValue()<minimum){
+  }else if(gpad.getSlider("EJEYD").getValue()<minimum){
     figures[currentModel].model.rotateX(radians(-rotateLevel));
   }
 
-  if(gpad.getButton("Botón 6").pressed()){
+  if(gpad.getButton("L2").pressed()){
     figures[currentModel].model.rotateZ(radians(-rotateLevel));
   }
   
-  if(gpad.getButton("Botón 7").pressed()){       
+  if(gpad.getButton("R2").pressed()){       
     figures[currentModel].model.rotateZ(radians(rotateLevel));
   }
 }
@@ -155,15 +148,15 @@ void movePoints(){
   String u = f.get(neededPoint);
   Float [] xyz = figures[currentModel].ShapeVertex.get(u); 
   
-  if(gpad.getSlider("Eje Y").getValue()<minimum){
+  if(gpad.getSlider("EJEYI").getValue()<minimum){
     xyz[2]-=0.2;
-  }else if(gpad.getSlider("Eje Y").getValue()>minimum){
+  }else if(gpad.getSlider("EJEYI").getValue()>minimum){
     xyz[2]+=0.2;
   }
   
-  if(gpad.getSlider("Eje X").getValue()<minimum){
+  if(gpad.getSlider("EJEXI").getValue()<minimum){
     xyz[0]+=0.2;
-  }else if(gpad.getSlider("Eje X").getValue()>minimum){
+  }else if(gpad.getSlider("EJEXI").getValue()>minimum){
     xyz[0]-=0.2;
   }
   
@@ -178,7 +171,7 @@ void movePoints(){
 
 
 void resetPoint(){
-  if(gpad.getButton("Botón 10").pressed()){
+  if(gpad.getButton("STICKI").pressed()){
       
       ArrayList<String> f =  new ArrayList<String>(figures[currentModel].concidentialPoints.keySet());
       String u = f.get(neededPoint);
@@ -187,7 +180,7 @@ void resetPoint(){
       figures[currentModel].changeVertex(u, xyz);
   }
   
-  if(gpad.getButton("Botón 11").pressed()){
+  if(gpad.getButton("STICKD").pressed()){
     figures[currentModel].model.resetMatrix();
   }
   
@@ -210,9 +203,9 @@ void changePoint(){
 
 float sx=1;
 void scaleModel(){
-  if(gpad.getSlider("Eje Y").getValue()<minimum){
+  if(gpad.getSlider("EJEYI").getValue()<minimum){
     sx=1.1;
-  }else if(gpad.getSlider("Eje Y").getValue()>minimum){
+  }else if(gpad.getSlider("EJEYI").getValue()>minimum){
     sx=0.9;
   }else{
     sx=1;
@@ -228,7 +221,7 @@ void scaleModel(){
 ////////////////////////////////////////////////////////////
 
 void selectModel(int I){
-  if(gpad.getButton("Botón 2").pressed()&&buttonDelay>7){
+  if(gpad.getButton("EQUIS").pressed()&&buttonDelay>7){
     selected=true;
    scene.lookAt(new Vector(figures[I].modelsPosition.x,figures[I].modelsPosition.y,figures[I].modelsPosition.z));
     currentModel = I;
@@ -237,7 +230,7 @@ void selectModel(int I){
 }
 
 void deselectModel(){
-  if(gpad.getButton("Botón 1").pressed()&&buttonDelay>7){
+  if(gpad.getButton("CIRCULO").pressed()&&buttonDelay>7){
     figures[currentModel].removePoint();
     currentModel = -2;
     buttonDelay=0;
@@ -252,32 +245,32 @@ void deselectModel(){
 ////////////////////////////////////////////////////////////
 
 void reset(){
-  if(gpad.getButton("Botón 9").pressed()&&buttonDelay>7){
+  if(gpad.getButton("START").pressed()&&buttonDelay>7){
     frameCount=-1;
     buttonDelay=0;
   }
 }
 void end(){
-  if(gpad.getButton("Botón 8").pressed()&&buttonDelay>7){
+  if(gpad.getButton("SELECT").pressed()&&buttonDelay>7){
     exit();
   }
 }
 
 void turnLights(){
-  if(gpad.getButton("Botón 3").pressed()&&buttonDelay>7){
+  if(gpad.getButton("CUADRADO").pressed()&&buttonDelay>7){
     lightsOn=!lightsOn;
     buttonDelay=0;
   }
 }
 
 void showCanvas(){
-   if(gpad.getButton("Botón 4").pressed()){
+   if(gpad.getButton("L1").pressed()){
       controlsMove= true;
     }else{
       controlsMove= false;
     }
     
-    if(gpad.getButton("Botón 5").pressed()){
+    if(gpad.getButton("R1").pressed()){
       controlsClick= true;
     }else{
       controlsClick = false;

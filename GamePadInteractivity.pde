@@ -2,7 +2,6 @@
 *
 * Taller Interactividad: Interacción con GamePad
 * Por Juan Sebastián Martínez Beltrán
-* Por el momento solo funciona con Twin USB GamePad configurado en Windows
 * 
 * Pestaña Principal: GamePad Interactivity: Inicialización, Setup y Draw
 *
@@ -42,7 +41,7 @@ boolean controlsClick = false;
 
 //Figuras a modelar
 Figure figures[] = new Figure [NO_MODELS];
-
+boolean started =false;
 /**
 *
 * Setup(): Inicialización de figuras y el ambiente de Framesjs
@@ -51,7 +50,9 @@ Figure figures[] = new Figure [NO_MODELS];
 void setup() {
   selected=false;
   neededPoint=0;
-  initControllers();
+  if(!started)
+    initControllers();
+  started=true;
   //fullScreen(P3D);
   size(700,700,P3D);
   buttons = createGraphics (100, 50);
@@ -148,7 +149,7 @@ void modelFunctions(){
     }
     lastNeeded=neededPoint;
   }
-  if(gpad.getButton("Botón 0").pressed()){
+  if(gpad.getButton("TRIANGULO").pressed()){
     scaleModel();
   }else{
     sx=1;

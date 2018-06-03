@@ -2,7 +2,6 @@
 *
 * Taller Interactividad: Interacción con GamePad
 * Por Juan Sebastián Martínez Beltrán
-* Por el momento solo funciona con Twin USB GamePad configurado en Windows
 * 
 * Pestaña Figure: Clase Figure, con un respectivo Shape y PShape, y HashMaps indicados
 *

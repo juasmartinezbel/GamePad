@@ -2,7 +2,6 @@
 *
 * Taller Interactividad: Interacción con GamePad
 * Por Juan Sebastián Martínez Beltrán
-* Por el momento solo funciona con Twin USB GamePad configurado en Windows
 * 
 * Pestaña Model: Funciones con respecto a inicializar y crear modelos 
 * Las operaciones de esta pestaña fueron tomadas de: https://github.com/VisualComputing/framesjs/blob/processing/examples/ik/InteractiveFish/InteractiveFish.pde
