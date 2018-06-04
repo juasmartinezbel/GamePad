@@ -1,13 +1,13 @@
 # Taller de Interacción: Gamepad como Interacción
 ![Control](http://newmore.es/2803-large_default/mando-juego-con-vibracion-dual-shock-para-pc.jpg)
 
-## Autor
+# Autor
 
 | Integrante | github nick |
 |------------|-------------|
 |Juan Sebastián Martínez Beltrán|juasmartinezbel|
 
-## Descripción del Proyecto y Objetivos
+# Descripción del Proyecto y Objetivos
 
 El objetivo del proyecto es ofrecer una forma de interactividad con el ambiente y objetos pertenecientes a un mundo creado en Processing con 6 grados de libertad, a través las opciones que ofrecen los botones, flechas y sticks de un control de juegos genérico **el cual se deberá configurar a la hora de iniciar la aplicación.**
 
@@ -38,7 +38,7 @@ Se utilizan principalmente 4 pestañas para dividir el trabajo, más una de prue
 - **Model:** Lugar donde se tienen funciones relacionadas con la inicialización y uso de modelos _PShape_ y _Shape_
 - **ScreenCoordinates:** Lugar donde se tienen funciones para los gráficos que se tienen en frente de la pantalla, como la funcionalidad de los botones y el puntero.
 
-## Cómo Funciona
+# Cómo Funciona
 
 Lo primero que se debe hacer, es configurar los controles gracias a la librería **Game Controller Plus** la cual provee una interfaz para relacionar los botones del control de entrada (Derecha, cuando oprima un botón o mueva un stick, estas se iluminarán) con los que utilizará el programa (Izquierda) cuando inicie la aplicación. Una vez terminado el mapeo, se le dará click a **Verify** y posteriormente a **USE**, opciones en la parte superior derecha de la pantalla verde. En caso de cometer un error, es preferible salir del programa e intentarlo de nuevo.
 
@@ -60,7 +60,7 @@ Existe también un booleano principal que me divide la variable en dos, un _sele
 
 Además, si se oprimen los botones **_R1 y/o L1_** se podrá ver en pantalla el mapeo de botones respectivo y cómo interactuar con el ambiente y el modelol
 
-## Desarrollo.
+# Desarrollo.
 
 Se utilizan dos librerías principales:
 - **Game Control Plus** para utilizar el GamePad
@@ -94,13 +94,15 @@ Cuando todo está iniciado, procedemos a dibujar con _draw_ Acá se resaltan tar
 - drawGrid me dibujará el piso y las paredes de la "galería" utilizando una grilla
 - Un _for_ que me dibujará cada uno de los shapes cargados con _**Shape.draw()**_, sus respectivas mesas y cajas invisibles.
 - Una difurcación dada con _if_ que me cambiará el modelo del funcionamiento si un modelo está seleccionado o no
-### Funciones de Cámara:
+
+
+## Funciones de Cámara:
 - _**cameraFunctions()**_ que, como su nombre lo indica, estará escuchando funciones relacionadas al comportamiento de la cámara. Si recién se entró aquí, se reiniciarán las variables especificas de los modelos, como digamos, cuál vertice estoy usando.
 - _**pointer()**_ Función que me dibujará el puntero en pantalla dependiendo de dónde se encuentra actualmente, si no hay nada con qué interactuar, lo dibujará **blanco**, en caso contrario, me lo dibujará **rojo**. Para hacer esta percepción, cuando se inicializó el programa se crearon unas cajas invisibles basadas en las coordenadas de los respectivos modelos, y se mide con _scene.pointUnderPixel(height/2, width/2)_ para verificar si el puntero se encuentra sobre las coordenadas máximas y mínimas de un objeto interactivo. Y si se selecciona, podremos comenzar a manipularlo.
 
 ![boxes](https://pbs.twimg.com/media/Des7Vg5WsAA1EhM.jpg) 
 
-### Funciones de modelo
+## Funciones de modelo
 - Cuando se selecciona un modelo, se igualará una variable _currentModel_ haciendo referencia al indice del modelo para poder acceder a HashMaps y arreglos que cuardan caracteristicas de este, así como al PShape y Shape en sí.
 - Se obtiene el tamaño de **vertices igualados** del modelo.
 - Se tiene qué vertice necesito manipular con _neededPoint_. Este se saca con modulo para que se mantenga dentro del rango del tamaño.
@@ -121,7 +123,11 @@ Cuando todo está iniciado, procedemos a dibujar con _draw_ Acá se resaltan tar
 
 Una ves de vuelta al camino común y corriente dentro del **_draw()_**, lo único que queda es hacer verificación de los controles restantes, como el de salir y resetear el ambiente, y todo lo relacionadó al HUD, como lo es el puntero (y su respectiva selección de modelo explicada anteriormente), y las instrucciones.
 
-## Referencias
+# Trabajo a Futuro
+
+Con las oportunidades que ofrece Processing y el manejo de control, se desea buscar una manera de crear mundos interactivos en 3D en los que una persona podrá ejecutar acciones de diferente mantera, y explorar el mundo mejor con opciones que ofrezca un simple control
+
+# Referencias y Librerías
 - Fuente de los modelos utilizados: [Models Resources](https://www.models-resource.com)
 ![Models](https://www.models-resource.com/resources/images/header/logo.png)
 - Librería para uso del Gamepad: [Game Control Plus](http://lagers.org.uk/gamecontrol/index.html)
